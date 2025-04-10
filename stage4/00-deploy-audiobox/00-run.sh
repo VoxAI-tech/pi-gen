@@ -43,7 +43,9 @@ install -v -o 0 -g 0 -m 644 "${AUDIOBOX_PROJECT_DIR}/systemd/"*.timer "${ROOTFS_
 # --- Copy Config Files --- ## Make sure target dir /etc/rauc exists
 echo "Copying configuration files..."
 install -v -o 0 -g 0 -m 644 files/system.conf "${ROOTFS_DIR}/etc/rauc/"
+# Keyring path points to dev_ca within the main project repo
 install -v -o 0 -g 0 -m 644 "${AUDIOBOX_PROJECT_DIR}/dev_ca/rauc-public.crt" "${ROOTFS_DIR}/etc/rauc/keyring.pem"
+# Audio client example config path
 install -v -o 0 -g 0 -m 644 "${AUDIOBOX_PROJECT_DIR}/audio_client/config.toml.example" "${ROOTFS_DIR}/etc/audiobox/"
 
 echo "File copying complete." 
