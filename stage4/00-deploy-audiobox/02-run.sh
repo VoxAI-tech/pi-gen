@@ -10,6 +10,24 @@ echo "Using provided Tailscale Auth Key."
 
 # Run within chroot
 on_chroot << EOF
+
+# --- Create base directories and application symlinks for persistent state --- #
+# Base persistent directory (/data/audiobox) should be created in stage2.
+# Create the mount/link points expected by the application in the rootfs.
+echo "Creating application link points and symlinks for persistent state..."
+mkdir -p /etc/audiobox/keys # Create mount point for keys symlink target
+
+# Link persistent state dirs/files from /data/audiobox to their expected locations in rootfs
+ln -sfv /data/audiobox/keys /etc/audiobox/keys
+ln -sfv /data/audiobox/device.uuid /etc/audiobox/device.uuid
+ln -sfv /data/audiobox/cpu.serial /etc/audiobox/cpu.serial
+ln -sfv /data/audiobox/first_boot_complete /etc/audiobox/first_boot_complete
+# Also link the persistent device key/pubkey if polling client needs direct access (adjust polling_client paths if not)
+ln -sfv /data/audiobox/keys/device.key /etc/audiobox/keys/device.key
+ln -sfv /data/audiobox/keys/device.key.pub /etc/audiobox/keys/device.key.pub
+echo "Application persistent state symlinks created."
+# ------------------------------------------------------------------------- #
+
 echo "Enabling systemd services..."
 systemctl enable first-boot.service
 systemctl enable polling-client.service
